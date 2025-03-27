@@ -17,4 +17,10 @@ public record Item(
         String location,
         String donorId,
         LocalDateTime createdAt
-) {}
+) {
+    public Item {
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
+    }
+}
