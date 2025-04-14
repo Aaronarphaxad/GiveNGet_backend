@@ -9,7 +9,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import com.example.givenget.model.Item;
+import com.example.givenget.model.User;
 import com.example.givenget.repository.ItemRepository;
+import com.example.givenget.repository.UserRepository;
 
 @SpringBootApplication
 public class GivengetServerApplication {
@@ -36,6 +38,32 @@ public class GivengetServerApplication {
                 System.out.println("✅ Sample data inserted");
             } else {
                 System.out.println("ℹ️ Sample data already exists, skipping insert.");
+            }
+        };
+    }
+	
+	@Bean  //default user
+	public CommandLineRunner loadUserData(UserRepository userRepository) {
+        return args -> {
+           
+            if (userRepository.count() == 0) {
+                User sampleUser = new User(
+                        null,
+                        "John",
+                        "1234567890",
+                        "John@123.com",
+                        "700 Royal Avenue",
+                        4,
+                        List.of(),
+                        List.of(),
+                        List.of(),
+                        List.of("donor123"),
+                        LocalDateTime.now()
+                );
+                userRepository.save(sampleUser);
+                System.out.println("✅ User data inserted");
+            } else {
+                System.out.println("ℹ️ User data already exists, skipping insert.");
             }
         };
     }
