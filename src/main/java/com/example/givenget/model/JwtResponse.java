@@ -1,3 +1,5 @@
 package com.example.givenget.model;
 
-public record JwtResponse(String accessToken) {}
+public record JwtResponse(
+		String accessToken,
+	    String userId) {}

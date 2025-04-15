@@ -63,6 +63,8 @@ public class AuthService {
         if (!passwordEncoder.matches(req.password(), encodedPassword)) {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
+        
+        User user = userRepository.findByEmail(req.email()).get();
 
         String token = Jwts.builder()
             .setSubject(req.email())
@@ -72,6 +74,6 @@ public class AuthService {
             .signWith(jwtKey)
             .compact();
 
-        return ResponseEntity.ok(new JwtResponse(token));
+        return ResponseEntity.ok(new JwtResponse(token, user.id()));
     }
 }
