@@ -39,6 +39,7 @@ public class UserService {
 				updatedUser.name(),
 				updatedUser.phoneNum(),
 				updatedUser.email(),
+				updatedUser.password(),
 				updatedUser.location(),
 				updatedUser.rating(),
 				updatedUser.likedItems(),

@@ -37,6 +37,7 @@ public class AuthService {
             req.name(),
             req.phoneNum(),
             req.email(),
+            passwordEncoder.encode(req.password()),
             req.location(),
             0,
             List.of(),
@@ -59,12 +60,12 @@ public class AuthService {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
 
-        String encodedPassword = userRepository.getPasswordByEmail(req.email());
-        if (!passwordEncoder.matches(req.password(), encodedPassword)) {
+        User user = userOpt.get();
+
+        // If password is stored in the User record directly
+        if (!passwordEncoder.matches(req.password(), user.password())) {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
-        
-        User user = userRepository.findByEmail(req.email()).get();
 
         String token = Jwts.builder()
             .setSubject(req.email())

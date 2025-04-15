@@ -13,6 +13,7 @@ public record User(
 		String name,
 		String phoneNum,
 		String email,
+		String password,
 		String location,
 		int rating,
 		List<Item> likedItems,
