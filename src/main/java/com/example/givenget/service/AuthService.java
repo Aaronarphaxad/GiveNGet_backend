@@ -47,11 +47,24 @@ public class AuthService {
             LocalDateTime.now()
         );
 
-        // Save user with encoded password stored in a map or a separate auth store
+        // Save user with encoded password 
         userRepository.save(newUser);
-        userRepository.storePassword(req.email(), passwordEncoder.encode(req.password())); 
+  
 
-        return ResponseEntity.ok("User registered successfully");
+        // Retrieve the saved user by email (to get assigned ID)
+        User savedUser = userRepository.findByEmail(req.email()).get();
+
+        // Generate JWT token
+        String token = Jwts.builder()
+            .setSubject(req.email())
+            .claim("scope", "givenget:read givenget:write")
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
+            .signWith(jwtKey)
+            .compact();
+
+        // Return accessToken + userId in response
+        return ResponseEntity.ok(new JwtResponse(token, savedUser.id()));
     }
 
     public ResponseEntity<?> authenticateUser(LoginRequest req) {
