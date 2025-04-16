@@ -42,7 +42,7 @@ public class ItemService {
                         updatedItem.imageUrls(),
                         updatedItem.location(),
                         updatedItem.donorId(),
-                        updatedItem.createdAt()
+                        existingItem.createdAt()
                 ))
                 .map(itemRepository::save);
     }
