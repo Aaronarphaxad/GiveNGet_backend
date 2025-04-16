@@ -12,11 +12,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+        .cors(Customizer.withDefaults())
+        .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(authorize -> authorize
 
             // Public access for signup & login
             .requestMatchers(HttpMethod.POST, "/api/givenget/auth/signup").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/givenget/auth/login").permitAll()
+            .requestMatchers("/api/givenget/auth/**").permitAll()
 
             // Public GET access to view donation items
             .requestMatchers(HttpMethod.GET, "/api/givenget/items/**").permitAll()
