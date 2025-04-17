@@ -2,59 +2,91 @@ package com.example.givenget.controller;
 
 import java.util.List;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.givenget.model.User;
 import com.example.givenget.service.UserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.Content;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 @RestController
 @RequestMapping("/api/givenget/users")
+@Tag(name = "Users", description = "APIs for managing users")
 public class UserController {
 
 	private final UserService userService;
 
 	public UserController(UserService userService) {
-		super();
 		this.userService = userService;
 	}
-	
-	//Create
+
+	@Operation(summary = "Create a new user (internal use)")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "User created successfully",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+		@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content)
+	})
 	@PostMapping
 	public ResponseEntity<User> createUser(@RequestBody User user){
 		return ResponseEntity.ok(userService.createUser(user));
 	}
-	
-	//Read all
+
+	@Operation(summary = "Get all users (admin-only access)")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "List of users retrieved",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+		@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content)
+	})
 	@GetMapping
 	public ResponseEntity<List<User>> getAllUsers(){
 		return ResponseEntity.ok(userService.getAllUsers());
 	}
-	
-	//Read one
+
+	@Operation(summary = "Get a user by ID")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "User found",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+		@ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+		@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content)
+	})
 	@GetMapping("/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable String id){
+	public ResponseEntity<User> getUserById(
+		@Parameter(description = "ID of the user to retrieve") @PathVariable String id){
 		return userService.getUserById(id)
 				.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
-	
-	//Update
+
+	@Operation(summary = "Update a user's information")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", description = "User updated successfully",
+			content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+		@ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+		@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content)
+	})
 	@PutMapping("/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody User user){
+	public ResponseEntity<User> updateUser(
+		@Parameter(description = "ID of the user to update") @PathVariable String id,
+		@RequestBody User user){
 		return userService.updateUser(id, user)
 				.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
-	
-	//Delete
+
+	@Operation(summary = "Delete a user by ID")
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "204", description = "User deleted successfully", content = @Content),
+		@ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+		@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content)
+	})
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteUser(@PathVariable String id){
+	public ResponseEntity<Void> deleteUser(
+		@Parameter(description = "ID of the user to delete") @PathVariable String id){
 		userService.deleteUser(id);
 		return ResponseEntity.noContent().build();
 	}

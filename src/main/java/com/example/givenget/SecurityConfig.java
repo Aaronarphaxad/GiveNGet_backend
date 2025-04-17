@@ -20,6 +20,11 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/api/givenget/auth/signup").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/givenget/auth/login").permitAll()
             .requestMatchers("/api/givenget/auth/**").permitAll()
+            .requestMatchers(
+            	    "/swagger-ui/**",
+            	    "/v3/api-docs/**",
+            	    "/swagger-ui.html"
+            	).permitAll()
 
             // Public GET access to view donation items
             .requestMatchers(HttpMethod.GET, "/api/givenget/items/**").permitAll()
