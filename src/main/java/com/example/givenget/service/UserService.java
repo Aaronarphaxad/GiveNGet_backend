@@ -42,9 +42,9 @@ public class UserService {
 				updatedUser.password(),
 				updatedUser.location(),
 				updatedUser.rating(),
-				updatedUser.likedItems(),
-				updatedUser.donatedItems(),
-				updatedUser.receivedItems(),
+				updatedUser.likedIDItems(),
+				updatedUser.donatedIDItems(),
+				updatedUser.receivedIDItems(),
 				updatedUser.notifications(),
 				updatedUser.createdAt()
 				)).map(userRepository::save);

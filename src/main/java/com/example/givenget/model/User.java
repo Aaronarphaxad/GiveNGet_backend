@@ -16,9 +16,9 @@ public record User(
 		String password,
 		String location,
 		int rating,
-		List<Item> likedItems,
-		List<Item> donatedItems,
-		List<Item> receivedItems,
+		List<String> likedIDItems,
+		List<String> donatedIDItems,
+		List<String> receivedIDItems,
 		List<String> notifications,
 		LocalDateTime createdAt
 		) {
