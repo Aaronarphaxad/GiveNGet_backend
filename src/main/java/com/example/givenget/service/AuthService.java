@@ -54,14 +54,17 @@ public class AuthService {
         // Retrieve the saved user by email (to get assigned ID)
         User savedUser = userRepository.findByEmail(req.email()).get();
 
+        final String SECRET = "SuperSecretKeyThatMatchesAuthService";
+
         // Generate JWT token
         String token = Jwts.builder()
-            .setSubject(req.email())
-            .claim("scope", "givenget:read givenget:write")
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
-            .signWith(jwtKey)
-            .compact();
+                .setSubject(req.email())
+                .claim("scope", List.of("givenget:read","givenget:write"))
+                .claim("iss", "http://192.168.1.126:9000")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
+                .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SignatureAlgorithm.HS256)
+                .compact();
 
         // Return accessToken + userId in response
         return ResponseEntity.ok(new JwtResponse(token, savedUser.id()));
@@ -80,12 +83,15 @@ public class AuthService {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
 
+        final String SECRET = "SuperSecretKeyThatMatchesAuthService";
+
         String token = Jwts.builder()
             .setSubject(req.email())
-            .claim("scope", "givenget:read givenget:write")
+            .claim("scope", List.of("givenget:read","givenget:write"))
+            .claim("iss", "http://192.168.1.126:9000")
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
-            .signWith(jwtKey)
+            .signWith(Keys.hmacShaKeyFor(SECRET.getBytes()), SignatureAlgorithm.HS256)
             .compact();
 
         return ResponseEntity.ok(new JwtResponse(token, user.id()));

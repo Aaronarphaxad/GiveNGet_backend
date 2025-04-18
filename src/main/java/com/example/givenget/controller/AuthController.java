@@ -47,4 +47,13 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         return authService.authenticateUser(request);
     }
+
+
+    @GetMapping("/auth/debug")
+    public ResponseEntity<?> debugToken(org.springframework.security.core.Authentication auth) {
+        System.out.println("👤 Authenticated as: " + auth.getName());
+        System.out.println("🔐 Authorities: " + auth.getAuthorities());
+        return ResponseEntity.ok(auth.getAuthorities());
+    }
+
 }

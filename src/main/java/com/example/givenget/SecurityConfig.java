@@ -6,6 +6,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.oauth2.jwt.*;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+
+import javax.crypto.spec.SecretKeySpec;
+
 
 @Configuration
 public class SecurityConfig {
@@ -36,13 +47,36 @@ public class SecurityConfig {
 
             // Protect user resource access with scopes
             .requestMatchers(HttpMethod.GET, "/api/givenget/users/**").hasAuthority("SCOPE_givenget:read")
+//            .requestMatchers(HttpMethod.GET, "/api/givenget/users/**").authenticated()
             .requestMatchers(HttpMethod.PUT, "/api/givenget/users/**").hasAuthority("SCOPE_givenget:write")
             .requestMatchers(HttpMethod.DELETE, "/api/givenget/users/**").hasAuthority("SCOPE_givenget:write")
 
             // All other routes must be authenticated
             .anyRequest().authenticated()
         )
-        .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-        .build();
-}
+        .oauth2ResourceServer(oauth2 ->
+                oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
+        ).build();
+    }
+
+
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        String secretKey = "SuperSecretKeyThatMatchesAuthService"; // make sure it matches the one used in AuthService
+        return NimbusJwtDecoder.withSecretKey(
+                new SecretKeySpec(secretKey.getBytes(), "HmacSHA256")
+        ).build();
+    }
+
+
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtGrantedAuthoritiesConverter converter = new JwtGrantedAuthoritiesConverter();
+        converter.setAuthorityPrefix("SCOPE_");
+        converter.setAuthoritiesClaimName("scope");
+
+        JwtAuthenticationConverter jwtConverter = new JwtAuthenticationConverter();
+        jwtConverter.setJwtGrantedAuthoritiesConverter(converter);
+        return jwtConverter;
+    }
 }
