@@ -35,26 +35,44 @@ public class GivengetServerApplication {
 
 	
 	@Bean
-    public CommandLineRunner loadData(ItemRepository itemRepository) {
-        return args -> {
-            if (itemRepository.count() == 0) {
-                Item sampleItem = new Item(
-                        null,
-                        "Sample Chair",
-                        "A gently used wooden chair",
-                        "Furniture",
-                        List.of("https://example.com/images/chair1.jpg"),
-                        "Downtown Library",
-                        "donor123",
-                        LocalDateTime.now()
-                );
-                itemRepository.save(sampleItem);
-                System.out.println("✅ Sample data inserted");
-            } else {
-                System.out.println("ℹ️ Sample data already exists, skipping insert.");
-            }
-        };
-    }
+	public CommandLineRunner loadData(ItemRepository itemRepository) {
+	    return args -> {
+	    	itemRepository.deleteAll();
+	    	
+	        if (itemRepository.count() == 0) {
+	            List<Item> sampleItems = List.of(
+	                new Item(null, "Winter Jacket", "A warm jacket for winter", "Clothing",
+	                        List.of("https://res.cloudinary.com/dcmmplalc/image/upload/v1744916001/winter-jacket_w77q4u.jpg"),
+	                        "Reiben", "Downtown Library", "10-02-2025", true, "New", LocalDateTime.now()),
+
+	                new Item(null, "Study Desk", "Perfect desk for students", "Furniture",
+	                        List.of("https://res.cloudinary.com/dcmmplalc/image/upload/v1744916028/study-desk_oydimj.jpg"),
+	                        "Aaron", "School Lounge", "10-02-2025", true, "Fairly new", LocalDateTime.now()),
+
+	                new Item(null, "Shoes for kids", "Perfect shoes for kids", "Clothing",
+	                        List.of("https://res.cloudinary.com/dcmmplalc/image/upload/v1744916028/kids-shoes_qzd5ja.jpg"),
+	                        "Isabel", "Community Hall", "10-02-2025", true, "Used", LocalDateTime.now()),
+
+	                new Item(null, "Study Desk", "Perfect desk for students", "Electronics",
+	                        List.of("https://res.cloudinary.com/dcmmplalc/image/upload/v1744916028/study-desk-3_f9aqzk.jpg"),
+	                        "Yaolong", "Room 405", "10-02-2025", false, "Fairly new", LocalDateTime.now()),
+
+	                new Item(null, "Study Desk", "Perfect desk for students", "Books",
+	                        List.of("https://res.cloudinary.com/dcmmplalc/image/upload/v1744916030/study-desk-2_ha0pts.jpg"),
+	                        "Reiben", "Library", "10-02-2025", true, "New", LocalDateTime.now()),
+
+	                new Item(null, "Piano", "Perfect for music lovers", "Furniture",
+	                        List.of("https://res.cloudinary.com/dcmmplalc/image/upload/v1744916028/piano_s9akqa.jpg"),
+	                        "Yaolong", "Auditorium", "10-02-2025", false, "Used", LocalDateTime.now())
+	            );
+
+	            itemRepository.saveAll(sampleItems);
+	            System.out.println("✅ Sample data inserted");
+	        } else {
+	            System.out.println("ℹ️ Sample data already exists, skipping insert.");
+	        }
+	    };
+	}
 	
 	@Bean
 	public CommandLineRunner loadUserData(UserRepository userRepository, PasswordEncoder passwordEncoder) {

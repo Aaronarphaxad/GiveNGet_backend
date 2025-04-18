@@ -1,3 +1,4 @@
+
 package com.example.givenget.model;
 
 import org.springframework.data.annotation.Id;
@@ -14,13 +15,16 @@ public record Item(
         String description,
         String category,
         List<String> imageUrls,
-        String location,
         String donorId,
+        String location,
+        String datePosted,
+        Boolean availability,
+        String condition,
         LocalDateTime createdAt
 ) {
     public Item {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
+        if (datePosted == null || datePosted.isBlank()) {
+            datePosted = LocalDateTime.now().toLocalDate().toString(); // e.g., "2025-04-16"
         }
     }
 }

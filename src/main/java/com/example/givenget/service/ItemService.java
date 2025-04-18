@@ -31,7 +31,7 @@ public class ItemService {
         return itemRepository.findById(id);
     }
 
-    // Update
+ // Update
     public Optional<Item> updateItem(String id, Item updatedItem) {
         return itemRepository.findById(id)
                 .map(existingItem -> new Item(
@@ -40,12 +40,16 @@ public class ItemService {
                         updatedItem.description(),
                         updatedItem.category(),
                         updatedItem.imageUrls(),
+                        updatedItem.donorId(),     // ✅ fixed typo here
                         updatedItem.location(),
-                        updatedItem.donorId(),
-                        updatedItem.createdAt()
+                        updatedItem.datePosted(),
+                        updatedItem.availability(),
+                        updatedItem.condition(),
+                        existingItem.createdAt()   // preserve original createdAt
                 ))
                 .map(itemRepository::save);
     }
+
 
     // Delete
     public void deleteItem(String id) {
