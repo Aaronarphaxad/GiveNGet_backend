@@ -5,4 +5,5 @@ spring:
         jwt:
           audiences:
           - givenget
+          - givenget-ui
           issuer-uri: http://localhost:9000
