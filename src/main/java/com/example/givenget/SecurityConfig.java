@@ -33,6 +33,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/api/givenget/items/**").hasAuthority("SCOPE_givenget:write")
             .requestMatchers(HttpMethod.PUT, "/api/givenget/items/**").hasAuthority("SCOPE_givenget:write")
             .requestMatchers(HttpMethod.DELETE, "/api/givenget/items/**").hasAuthority("SCOPE_givenget:delete")
+            .requestMatchers(HttpMethod.GET, "/api/givenget/items/donor/**").permitAll()
 
             // Protect user resource access with scopes
             .requestMatchers(HttpMethod.GET, "/api/givenget/users/**").hasAuthority("SCOPE_givenget:read")

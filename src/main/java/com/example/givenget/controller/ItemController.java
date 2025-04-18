@@ -93,4 +93,8 @@ public class ItemController {
         itemService.deleteItem(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/donor/{donorId}")
+    public ResponseEntity<List<Item>> getDonationsByDonorId(@PathVariable String donorId) {
+        return ResponseEntity.ok(itemService.getItemsByDonorId(donorId));
+    }
 }

@@ -3,6 +3,7 @@ package com.example.givenget.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,7 +16,7 @@ public record Item(
         String description,
         String category,
         List<String> imageUrls,
-        String donorId,
+        @Field("donor_id") String donorId,
         String location,
         String datePosted,
         Boolean availability,

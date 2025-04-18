@@ -2,7 +2,10 @@ package com.example.givenget.service;
 
 import com.example.givenget.model.Item;
 import com.example.givenget.repository.ItemRepository;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +34,7 @@ public class ItemService {
         return itemRepository.findById(id);
     }
 
- // Update
+    // Update
     public Optional<Item> updateItem(String id, Item updatedItem) {
         return itemRepository.findById(id)
                 .map(existingItem -> new Item(
@@ -50,9 +53,23 @@ public class ItemService {
                 .map(itemRepository::save);
     }
 
-
     // Delete
     public void deleteItem(String id) {
         itemRepository.deleteById(id);
+    }
+    
+    
+    // list by DonorId
+    public List<Item> getItemsByDonorId(String donorId) {
+    	try {
+            List<Item> items = itemRepository.findByDonorId(donorId);
+            if (items.isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No donations found");
+            }
+            return items;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Query failed", e);
+        }
     }
 }
