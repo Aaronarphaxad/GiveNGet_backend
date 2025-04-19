@@ -1,6 +1,7 @@
 package com.example.givenget.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import com.example.givenget.model.User;
 import com.example.givenget.service.UserService;
@@ -72,11 +73,10 @@ public class UserController {
 		@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content)
 	})
 	@PutMapping("/{id}")
-	public ResponseEntity<User> updateUser(
-		@Parameter(description = "ID of the user to update") @PathVariable String id,
-		@RequestBody User user){
-		return userService.updateUser(id, user)
-				.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<User> updateUser(@PathVariable String id, @RequestBody Map<String, Object> updates) {
+		return userService.updateUserFields(id, updates)
+				.map(ResponseEntity::ok)
+				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@Operation(summary = "Delete a user by ID")
