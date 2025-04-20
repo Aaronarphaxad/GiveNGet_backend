@@ -6,4 +6,4 @@ spring:
           audiences:
           - givenget
           - givenget-ui
-          issuer-uri: http://localhost:9000
+          issuer-uri: http://192.168.1.126:9000

@@ -1,5 +1,6 @@
 package com.example.givenget.service;
 
+import com.example.givenget.SecurityConfig;
 import com.example.givenget.model.*;
 import com.example.givenget.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
@@ -20,7 +21,9 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final Key jwtKey = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Or externalize this for reuse
+    //    private final Key jwtKey = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Or externalize this for reuse
+    private final Key jwtKey = SecurityConfig.JWT_KEY;
+
 
     public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -33,35 +36,35 @@ public class AuthService {
         }
 
         User newUser = new User(
-            null,
-            req.name(),
-            req.phoneNum(),
-            req.email(),
-            passwordEncoder.encode(req.password()),
-            req.location(),
-            0,
-            List.of(),
-            List.of(),
-            List.of(),
-            List.of(),
-            LocalDateTime.now()
+                null,
+                req.name(),
+                req.phoneNum(),
+                req.email(),
+                passwordEncoder.encode(req.password()),
+                req.location(),
+                0,
+                List.of(),
+                List.of(),
+                List.of(),
+                List.of(),
+                LocalDateTime.now()
         );
 
-        // Save user with encoded password 
+        // Save user with encoded password
         userRepository.save(newUser);
-  
+
 
         // Retrieve the saved user by email (to get assigned ID)
         User savedUser = userRepository.findByEmail(req.email()).get();
 
         // Generate JWT token
         String token = Jwts.builder()
-            .setSubject(req.email())
-            .claim("scope", "givenget:read givenget:write")
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
-            .signWith(jwtKey)
-            .compact();
+                .setSubject(req.email())
+                .claim("scope", List.of("givenget:read","givenget:write"))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
+                .signWith(jwtKey)
+                .compact();
 
         // Return accessToken + userId in response
         return ResponseEntity.ok(new JwtResponse(token, savedUser.id()));
@@ -81,13 +84,14 @@ public class AuthService {
         }
 
         String token = Jwts.builder()
-            .setSubject(req.email())
-            .claim("scope", "givenget:read givenget:write")
-            .setIssuedAt(new Date())
-            .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
-            .signWith(jwtKey)
-            .compact();
+                .setSubject(req.email())
+                .claim("scope", List.of("givenget:read","givenget:write"))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 day
+                .signWith(jwtKey)
+                .compact();
 
         return ResponseEntity.ok(new JwtResponse(token, user.id()));
     }
+
 }
