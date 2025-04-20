@@ -39,8 +39,8 @@ public class GivengetServerApplication {
 	public CommandLineRunner loadData(ItemRepository itemRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
 	    return args -> {
 	    	//clear data
-	    	userRepository.deleteAll();
-	    	itemRepository.deleteAll();
+//	    	userRepository.deleteAll();
+//	    	itemRepository.deleteAll();
 	    	
 	    	//save users
 	    	if (userRepository.count() == 0) {
@@ -134,7 +134,7 @@ public class GivengetServerApplication {
 		                        yaolongId, "Auditorium", "10-02-2025", false, "Used", LocalDateTime.now())
 		            );
 
-		            itemRepository.saveAll(sampleItems);
+//		            itemRepository.saveAll(sampleItems);
 		            System.out.println("Sample data inserted");
 		            
 		            List<Item> savedItems = itemRepository.saveAll(sampleItems);

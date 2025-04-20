@@ -37,12 +37,12 @@ public class SecurityConfig {
                         // 🔐 Write/update/delete requires scope
                         .requestMatchers(HttpMethod.POST, "/api/givenget/items/**").hasAuthority("SCOPE_givenget:write")
                         .requestMatchers(HttpMethod.PUT, "/api/givenget/items/**").hasAuthority("SCOPE_givenget:write")
-                        .requestMatchers(HttpMethod.DELETE, "/api/givenget/items/**").hasAuthority("SCOPE_givenget:delete")
+                        .requestMatchers(HttpMethod.DELETE, "/api/givenget/items/**").hasAuthority("SCOPE_givenget:write")
 
                         // 🔐 Protect user profile endpoints
                         .requestMatchers(HttpMethod.GET, "/api/givenget/users/**").hasAuthority("SCOPE_givenget:read")
                         .requestMatchers(HttpMethod.PUT, "/api/givenget/users/**").hasAuthority("SCOPE_givenget:write")
-                        .requestMatchers(HttpMethod.DELETE, "/api/givenget/users/**").hasAuthority("SCOPE_givenget:delete")
+                        .requestMatchers(HttpMethod.DELETE, "/api/givenget/users/**").hasAuthority("SCOPE_givenget:write")
 
                         // All other routes must be authenticated
                         .anyRequest().authenticated()
