@@ -5,6 +5,7 @@ import com.example.givenget.service.ItemService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -94,6 +95,14 @@ public class ItemController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Get items donated by a specific user")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "List of donated items",
+            content = @Content(mediaType = "application/json",
+                array = @ArraySchema(schema = @Schema(implementation = Item.class)))),
+        @ApiResponse(responseCode = "404", description = "No items found for this donor", content = @Content),
+        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content)
+    })
     @GetMapping("/donor/{donorId}")
     public ResponseEntity<List<Item>> getDonationsByDonorId(@PathVariable String donorId) {
         return ResponseEntity.ok(itemService.getItemsByDonorId(donorId));
