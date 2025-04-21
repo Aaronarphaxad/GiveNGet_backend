@@ -78,6 +78,20 @@ public class UserController {
 				.orElse(ResponseEntity.notFound().build());
 	}
 
+	@Operation(summary = "Fully update a user, including liked/donated/received items")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200", description = "User updated successfully",
+					content = @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+			@ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+			@ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content)
+	})
+	@PutMapping("/full/{id}")
+	public ResponseEntity<User> fullyUpdateUser(@PathVariable String id, @RequestBody User updatedUser) {
+		return userService.updateUser(id, updatedUser)
+				.map(ResponseEntity::ok)
+				.orElse(ResponseEntity.notFound().build());
+	}
+
 	@Operation(summary = "Delete a user by ID")
 	@ApiResponses(value = {
 		@ApiResponse(responseCode = "204", description = "User deleted successfully", content = @Content),
